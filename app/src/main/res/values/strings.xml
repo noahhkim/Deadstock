@@ -28,4 +28,30 @@
     <!-- Dialog button text for the option to cancel deletion of the current shoe [CHAR LIMIT=20] -->
     <string name="cancel">Cancel</string>
 
+    <!-- Title for the activity to add a new shoe [CHAR LIMIT=20] -->
+    <string name="editor_activity_title_new_shoe">Add a Shoe</string>
+
+    <!-- Title for the activity to edit an existing shoe [CHAR LIMIT=20] -->
+    <string name="editor_activity_title_edit_shoe">Edit Shoe</string>
+
+    <!-- Label for dropdown menu option if the shoe's brand is Jordan [CHAR LIMIT=20] -->
+    <string name="brand_jordan">Jordan</string>
+
+    <!-- Label for dropdown menu option if the shoe's brand is Nike [CHAR LIMIT=20] -->
+    <string name="brand_nike">Nike</string>
+
+    <!-- Label for dropdown menu option if the shoe's brand is Adidas [CHAR LIMIT=20] -->
+    <string name="brand_adidas">Adidas</string>
+
+    <!-- Label for dropdown menu option if the shoe's brand is Puma [CHAR LIMIT=20] -->
+    <string name="brand_puma">Puma</string>
+
+    <!-- Label for dropdown menu option if the shoe's brand is Reebok [CHAR LIMIT=20] -->
+    <string name="brand_reebok">Reebok</string>
+
+    <!-- Label for dropdown menu option if the shoe's brand is Converse [CHAR LIMIT=20] -->
+    <string name="brand_converse">Converse</string>
+
+    <!-- Label for dropdown menu option if the shoe's brand is Other [CHAR LIMIT=20] -->
+    <string name="brand_other">Other</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- These are the options displayed in the brand drop-down Spinner -->
+    <string-array name="array_brand_options">
+        <item>@string/brand_jordan</item>
+        <item>@string/brand_nike</item>
+        <item>@string/brand_adidas</item>
+        <item>@string/brand_puma</item>
+        <item>@string/brand_reebok</item>
+        <item>@string/brand_converse</item>
+        <item>@string/brand_other</item>
+    </string-array>
+</resources>

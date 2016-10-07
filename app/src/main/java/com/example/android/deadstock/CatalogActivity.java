@@ -74,6 +74,9 @@ public class CatalogActivity extends AppCompatActivity implements
                 startActivity(intent);
             }
         });
+
+        // Initialize the CursorLoader
+        getSupportLoaderManager().initLoader(SHOE_LOADER, null, this);
     }
 
     @Override
