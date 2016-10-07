@@ -5,7 +5,7 @@
     <string name="action_delete_all_shoes">Delete All Shoes</string>
 
     <!-- Title text for the empty view, which describes the empty image [CHAR LIMIT=50] -->
-    <string name="empty_view_title_text">Get started by adding your kicks...</string>
+    <string name="empty_view_title_text">Add your kicks to get started...</string>
 
     <!-- Label for the brand information in the editor [CHAR LIMIT=30] -->
     <string name="category_brand">Brand</string>
@@ -54,4 +54,25 @@
 
     <!-- Label for dropdown menu option if the shoe's brand is Other [CHAR LIMIT=20] -->
     <string name="brand_other">Other</string>
+
+    <!-- Toast message in editor when new shoe has been successfully inserted [CHAR LIMIT=NONE] -->
+    <string name="editor_insert_shoe_successful">Shoe saved</string>
+
+    <!-- Toast message in editor when new shoe has failed to be inserted [CHAR LIMIT=NONE] -->
+    <string name="editor_insert_shoe_failed">Error with saving shoe</string>
+
+    <!-- Label for editor menu option to save shoe and leave editor [CHAR LIMIT=20] -->
+    <string name="action_save">Save</string>
+
+    <!-- Label for editor overflow menu option that deletes the current shoe [CHAR LIMIT=20] -->
+    <string name="action_delete">Delete</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current shoe [CHAR LIMIT=NONE] -->
+    <string name="delete_dialog_msg">Delete this shoe?</string>
+
+    <!-- Toast message in editor when current pet was successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_shoe_successful">Shoe deleted</string>
+
+    <!-- Toast message in editor when current pet has failed to be deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_shoe_failed">Error with deleting shoe</string>
 </resources>
