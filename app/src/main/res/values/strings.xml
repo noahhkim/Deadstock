@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Deadstock</string>
 
+    <!-- Label for overflow menu option that inserts fake shoe data into the app [CHAR LIMIT=20] -->
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+
     <!-- Label for overflow menu option that deletes all shoe data in the app [CHAR LIMIT=20] -->
     <string name="action_delete_all_shoes">Delete All Shoes</string>
 
@@ -75,4 +78,13 @@
 
     <!-- Toast message in editor when current pet has failed to be deleted [CHAR LIMIT=NONE] -->
     <string name="editor_delete_shoe_failed">Error with deleting shoe</string>
+
+    <!-- AlertDialog for unsaved changes [CHAR LIMIT=50] -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes quit editing?</string>
+
+    <!-- "Discard" option for unsaved changes [CHAR LIMIT=50] -->
+    <string name="discard">Discard</string>
+
+    <!-- "Keep Editing" option for unsaved changes [CHAR LIMIT=50] -->
+    <string name="keep_editing">Keep Editing</string>
 </resources>

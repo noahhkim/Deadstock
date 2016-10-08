@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,25 +31,39 @@ import com.example.android.deadstock.data.ShoeContract.ShoeEntry;
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Identifier for the shoe data loader */
+    /**
+     * Identifier for the shoe data loader
+     */
     private static final int EXITING_SHOE_LOADER = 0;
 
-    /** EditText field to enter the shoe's brand */
+    /**
+     * EditText field to enter the shoe's brand
+     */
     private Spinner mBrandSpinner;
 
-    /** EditText field to enter the shoe's name */
+    /**
+     * EditText field to enter the shoe's name
+     */
     private EditText mNameEditText;
 
-    /** EditText field to enter the shoe's quantity */
+    /**
+     * EditText field to enter the shoe's quantity
+     */
     private EditText mQuantityEditText;
 
-    /** EditText field to enter the shoe's price */
+    /**
+     * EditText field to enter the shoe's price
+     */
     private EditText mPriceEditText;
 
-    /** Brand of the pet */
+    /**
+     * Brand of the shoe
+     */
     private int mBrand = ShoeEntry.BRAND_OTHER;
 
-    /** Boolean flag that keeps track of whether the shoe has been edited (true) or not (false) */
+    /**
+     * Boolean flag that keeps track of whether the shoe has been edited (true) or not (false)
+     */
     private boolean mShoeHasChanged = false;
 
     /**
@@ -62,7 +78,9 @@ public class EditorActivity extends AppCompatActivity implements
         }
     };
 
-    /** Content URI for the existing shoe (null if it's a new shoe) */
+    /**
+     * Content URI for the existing shoe (null if it's a new shoe)
+     */
     private Uri mCurrentShoeUri;
 
     @Override
@@ -74,7 +92,7 @@ public class EditorActivity extends AppCompatActivity implements
         mCurrentShoeUri = getIntent().getData();
 
         // If the intent DOES NOT contain a shoe content URI, then we're creating a new shoe
-        if(mCurrentShoeUri == null) {
+        if (mCurrentShoeUri == null) {
             // This is a new shoe so change app bar to say "Add a Shoe"
             setTitle(R.string.editor_activity_title_new_shoe);
             // Invalidate the options menu so "Delete" menu option can be hidden
@@ -104,7 +122,9 @@ public class EditorActivity extends AppCompatActivity implements
 
     }
 
-    /** Setup the dropdown spinner that allows the user to select the brand of the shoe */
+    /**
+     * Setup the dropdown spinner that allows the user to select the brand of the shoe
+     */
     private void setupSpinner() {
         // Create adapter for spinner
         ArrayAdapter brandSpinnerAdapter = ArrayAdapter.createFromResource(this,
@@ -148,7 +168,9 @@ public class EditorActivity extends AppCompatActivity implements
         });
     }
 
-    /** Get user input from editor and save new shoe into database */
+    /**
+     * Get user input from editor and save new shoe into database
+     */
     private void saveShoe() {
         // Read from input fields
         String nameString = mNameEditText.getText().toString().trim();
@@ -156,7 +178,7 @@ public class EditorActivity extends AppCompatActivity implements
         String priceString = mPriceEditText.getText().toString().trim();
 
         // Check if this is supposed to be a new shoe
-        if(mCurrentShoeUri == null &&
+        if (mCurrentShoeUri == null &&
                 TextUtils.isEmpty(nameString) &&
                 TextUtils.isEmpty(quantityString) &&
                 TextUtils.isEmpty(priceString) &&
@@ -181,9 +203,9 @@ public class EditorActivity extends AppCompatActivity implements
         // If no price is provided, use 0 by default for price
         int price = 0;
         if (!TextUtils.isEmpty(priceString)) {
-            price = Integer.parseInt(quantityString);
+            price = Integer.parseInt(priceString);
         }
-        values.put(ShoeEntry.COLUMN_SHOE_QUANTITY, price);
+        values.put(ShoeEntry.COLUMN_SHOE_PRICE, price);
 
         if (mCurrentShoeUri == null) {
             // Insert a new shoe into the provider, returning the content URI for the new shoe
@@ -241,25 +263,146 @@ public class EditorActivity extends AppCompatActivity implements
                 return true;
             //Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
+                // If shoe hasn't changed, continue with navigating up
+                if (!mShoeHasChanged) {
+                    NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    return true;
+                }
 
+                // If there are unsaved changes, show warning dialog
+                DialogInterface.OnClickListener discardButtonClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // User clicked "discard" button
+                                NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                            }
+                        };
 
+                // Show dialog to notify unsaved changes
+                showUnsavedChangesDialog(discardButtonClickListener);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        // Define a projection that contains all columns from the table
+        String[] projection = {
+                ShoeEntry._ID,
+                ShoeEntry.COLUMN_SHOE_BRAND,
+                ShoeEntry.COLUMN_SHOE_NAME,
+                ShoeEntry.COLUMN_SHOE_QUANTITY,
+                ShoeEntry.COLUMN_SHOE_PRICE
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        return new CursorLoader(
+                this,
+                mCurrentShoeUri,
+                projection,
+                null,
+                null,
+                null
+        );
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        // Bail early if the cursor is null or there is less than 1 row in the cursor
+        if (cursor == null || cursor.getCount() < 1) {
+            return;
+        }
 
+        // Proceed with moving to the first row of the cursor and reading data from it
+        if (cursor.moveToFirst()) {
+
+            int brandColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_BRAND);
+            int nameColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_NAME);
+            int quantityColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_QUANTITY);
+            int priceColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_PRICE);
+
+            // Extract out the value from the Cursor for the given column index
+            int brand = cursor.getInt(brandColumnIndex);
+            String name = cursor.getString(nameColumnIndex);
+            int quantity = cursor.getInt(quantityColumnIndex);
+            int price = cursor.getInt(priceColumnIndex);
+
+            // Map constant value from database into one of the dropdown options,
+            // then call setSelection() so that option is displayed on screen as
+            // the current selection
+            switch (brand) {
+                case ShoeEntry.BRAND_OTHER:
+                    mBrandSpinner.setSelection(0);
+                    break;
+                case ShoeEntry.BRAND_JORDAN:
+                    mBrandSpinner.setSelection(1);
+                    break;
+                case ShoeEntry.BRAND_NIKE:
+                    mBrandSpinner.setSelection(2);
+                    break;
+                case ShoeEntry.BRAND_ADIDAS:
+                    mBrandSpinner.setSelection(3);
+                    break;
+                case ShoeEntry.BRAND_PUMA:
+                    mBrandSpinner.setSelection(4);
+                    break;
+                case ShoeEntry.BRAND_REEBOK:
+                    mBrandSpinner.setSelection(5);
+                    break;
+                case ShoeEntry.BRAND_CONVERSE:
+                    mBrandSpinner.setSelection(6);
+                    break;
+            }
+
+            // Update the views on the screen with the values from the database
+            mNameEditText.setText(name);
+            mQuantityEditText.setText(Integer.toString(quantity));
+            mPriceEditText.setText(Integer.toString(price));
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        // If the loader is invalidated, clear out all the data from the input fields
+        mBrandSpinner.setSelection(0);
+        mNameEditText.setText("");
+        mQuantityEditText.setText("");
+        mPriceEditText.setText("");
+    }
 
+    // Method for creating a "Discard changes" dialog
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
+
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the shoe.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        // If the shoe hasn't changed, continue with handling back button press
+        if (!mShoeHasChanged) {
+            super.onBackPressed();
+            return;
+        }
     }
 
     private void showDeleteConfirmationDialog() {
@@ -290,7 +433,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     private void deleteShoe() {
         // Only perform the delete if this is an existing shoe
-        if(mCurrentShoeUri != null) {
+        if (mCurrentShoeUri != null) {
             // Deletes the words that match the selection criteria
             int rowsDeleted = getContentResolver().delete(
                     mCurrentShoeUri,

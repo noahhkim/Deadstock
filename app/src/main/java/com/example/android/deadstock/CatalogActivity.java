@@ -1,6 +1,7 @@
 package com.example.android.deadstock;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -84,6 +85,25 @@ public class CatalogActivity extends AppCompatActivity implements
         super.onStart();
     }
 
+    /**
+     * Helper method to insert hardcoded shoe data into the database. For debugging purposes only.
+     */
+    private void insertShoe() {
+        // Create a ContentValues object where column names are the keys,
+        // and sample shoe attributes are the values.
+        ContentValues values = new ContentValues();
+        values.put(ShoeEntry.COLUMN_SHOE_BRAND, ShoeEntry.BRAND_JORDAN);
+        values.put(ShoeEntry.COLUMN_SHOE_NAME, "Jordan");
+        values.put(ShoeEntry.COLUMN_SHOE_QUANTITY, 5);
+        values.put(ShoeEntry.COLUMN_SHOE_PRICE, 3);
+
+        // Insert a new row for Toto into the provider using the ContentResolver.
+        // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
+        // into the pets database table.
+        // Receive the new content URI that will allow us to access Toto's data in the future.
+        Uri newUri = getContentResolver().insert(ShoeEntry.CONTENT_URI, values);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Adds menu items to app bar
@@ -95,6 +115,10 @@ public class CatalogActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
+            // Respond to a click on the "Insert dummy data" menu option
+            case R.id.action_insert_dummy_data:
+                insertShoe();
+                return true;
             // Respond to a click on the "Delete All Shoes" menu option
             case R.id.action_delete_all_shoes:
                 // Delete all pets from the database

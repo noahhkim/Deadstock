@@ -139,7 +139,7 @@ public class ShoeProvider extends ContentProvider {
         }
 
         // If price is provided, check that it's greater than or equal to 0
-        Long price = values.getAsLong(ShoeEntry.COLUMN_SHOE_PRICE);
+        Integer price = values.getAsInteger(ShoeEntry.COLUMN_SHOE_PRICE);
         if (price != null && price < 0) {
             throw new
                     IllegalArgumentException("Shoe requires valid price");
@@ -158,7 +158,7 @@ public class ShoeProvider extends ContentProvider {
             return null;
         }
 
-        // Notify all listeners that hte data has changed for the shoe content URI
+        // Notify all listeners that the data has changed for the shoe content URI
         getContext().getContentResolver().notifyChange(uri, null);
 
         // Return the new URI with the ID appended at the end
@@ -253,7 +253,7 @@ public class ShoeProvider extends ContentProvider {
         // check that the price value is valid.
         if (values.containsKey(ShoeEntry.COLUMN_SHOE_PRICE)) {
             // Check that the weight is greater than or equal to 0 kg
-            Long price = values.getAsLong(ShoeEntry.COLUMN_SHOE_PRICE);
+            Integer price = values.getAsInteger(ShoeEntry.COLUMN_SHOE_PRICE);
             if (price != null && price < 0) {
                 throw new IllegalArgumentException("Shoe requires valid price");
             }

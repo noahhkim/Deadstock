@@ -46,13 +46,13 @@ public class ShoeContract {
         public final static String COLUMN_SHOE_BRAND ="brand";
 
         /** Possible values for brand of shoe */
-        public static final int BRAND_JORDAN = 0;
-        public static final int BRAND_NIKE = 1;
-        public static final int BRAND_ADIDAS = 2;
-        public static final int BRAND_PUMA = 3;
-        public static final int BRAND_REEBOK = 4;
-        public static final int BRAND_CONVERSE = 5;
-        public static final int BRAND_OTHER = 6;
+        public static final int BRAND_OTHER = 0;
+        public static final int BRAND_JORDAN = 1;
+        public static final int BRAND_NIKE = 2;
+        public static final int BRAND_ADIDAS = 3;
+        public static final int BRAND_PUMA = 4;
+        public static final int BRAND_REEBOK = 5;
+        public static final int BRAND_CONVERSE = 6;
 
         /** Returns whether or not the given brand is valid */
         public static boolean isValidBrand(int brand) {
@@ -69,7 +69,7 @@ public class ShoeContract {
         }
 
         /** Name of the shoe */
-        public final static String COLUMN_SHOE_NAME = "breed";
+        public final static String COLUMN_SHOE_NAME = "name";
 
         /** Quantity of the shoe */
         public final static String COLUMN_SHOE_QUANTITY = "quantity";
