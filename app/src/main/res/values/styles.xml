@@ -43,4 +43,13 @@
         <item name="android:paddingTop">16dp</item>
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>
+
+    <!-- Style for the list items quantity and price -->
+    <style name="ListItemsStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">#2B3D4D</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
 </resources>

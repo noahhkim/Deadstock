@@ -87,4 +87,7 @@
 
     <!-- "Keep Editing" option for unsaved changes [CHAR LIMIT=50] -->
     <string name="keep_editing">Keep Editing</string>
+
+    <!-- Sold button [CHAR LIMIT=50] -->
+    <string name="sold_button">Sold</string>
 </resources>
