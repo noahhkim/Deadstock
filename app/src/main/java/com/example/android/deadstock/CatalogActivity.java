@@ -1,17 +1,17 @@
 package com.example.android.deadstock;
 
+import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -77,7 +77,7 @@ public class CatalogActivity extends AppCompatActivity implements
         });
 
         // Initialize the CursorLoader
-        getSupportLoaderManager().initLoader(SHOE_LOADER, null, this);
+        getLoaderManager().initLoader(SHOE_LOADER, null, this);
     }
 
     @Override

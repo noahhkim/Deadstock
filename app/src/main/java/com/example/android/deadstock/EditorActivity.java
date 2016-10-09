@@ -6,10 +6,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
+import android.app.LoaderManager;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -103,10 +103,10 @@ public class EditorActivity extends AppCompatActivity implements
 
             // Initialize a loader to read shoe data from the database and display
             // current values in editor
-            getSupportLoaderManager().initLoader(EXITING_SHOE_LOADER, null, this);
+            getLoaderManager().initLoader(EXITING_SHOE_LOADER, null, this);
         }
 
-        // Fine all relevant views that we will need to read user input from
+        // Find all relevant views that we will need to read user input from
         mBrandSpinner = (Spinner) findViewById(R.id.spinner_brand);
         mNameEditText = (EditText) findViewById(R.id.edit_shoe_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_shoe_quantity);
@@ -402,7 +402,21 @@ public class EditorActivity extends AppCompatActivity implements
         if (!mShoeHasChanged) {
             super.onBackPressed();
             return;
+
         }
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+
+        // Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
     }
 
     private void showDeleteConfirmationDialog() {
@@ -444,10 +458,10 @@ public class EditorActivity extends AppCompatActivity implements
             // Show a toast message depending on whether or not the delete was successful
             if (rowsDeleted == 0) {
                 // If no rows were deleted, then there was an error with delete
-                Toast.makeText(this, getString(R.string.editor_delete_shoe_successful),
+                Toast.makeText(this, getString(R.string.editor_delete_shoe_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_delete_shoe_failed),
+                Toast.makeText(this, getString(R.string.editor_delete_shoe_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }
