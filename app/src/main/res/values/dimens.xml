@@ -7,7 +7,7 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!-- Margin around the sold button in CatalogActivity -->
-    <dimen name="sold_button_margins">16dp</dimen>
+    <dimen name="button_margin">16dp</dimen>
 
     <!-- Height of each list item -->
     <dimen name="list_item_height">88dp</dimen>

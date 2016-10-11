@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -39,6 +40,7 @@ public class EditorActivity extends AppCompatActivity implements
     private EditText mQuantityEditText;
     private Button mIncreaseButton;
     private Button mDecreaseButton;
+    private Button mOrderButton;
     private EditText mPriceEditText;
     private int mBrand = ShoeEntry.BRAND_OTHER;
     private String quantity;
@@ -92,6 +94,7 @@ public class EditorActivity extends AppCompatActivity implements
         mQuantityEditText = (EditText) findViewById(R.id.edit_shoe_quantity);
         mIncreaseButton = (Button) findViewById(R.id.increase_button);
         mDecreaseButton = (Button) findViewById(R.id.decrease_button);
+        mOrderButton = (Button) findViewById(R.id.order_button);
         mPriceEditText = (EditText) findViewById(R.id.edit_shoe_price);
 
         setupSpinner();
@@ -142,6 +145,20 @@ public class EditorActivity extends AppCompatActivity implements
                     currentQuantity = currentQuantity - 1;
                     setQuantity = String.valueOf(currentQuantity);
                     mQuantityEditText.setText(setQuantity);
+                }
+            }
+        });
+
+        // Set up OnClickListener for order button
+        mOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"));
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_summary_email_subject));
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
                 }
             }
         });

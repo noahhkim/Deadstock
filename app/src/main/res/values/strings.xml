@@ -97,6 +97,9 @@
     <!-- Decrement button [CHAR LIMIT=50] -->
     <string name="decrement_button">-</string>
 
+    <!-- Order button [CHAR LIMIT=50] -->
+    <string name="order_button">Order</string>
+
     <!-- Toast message in editor when more than 500 shoes are ordered [CHAR LIMIT=50] -->
     <string name="editor_quantity_exceeds_limit">You cannot order more than 500 shoes</string>
 
@@ -105,4 +108,7 @@
 
     <!-- Toast message in editor when user tries to click '+' without a number in quantity EditText field [CHAR LIMIT=50] -->
     <string name="editor_enter_number_first">You must enter a number first</string>
+
+    <!-- Email subject header for order summary [CHAR LIMIT=50] -->
+    <string name="order_summary_email_subject">Order summary</string>
 </resources>
