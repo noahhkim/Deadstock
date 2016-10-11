@@ -86,14 +86,29 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <!-- Weight field -->
+            <!-- Quantity field -->
+            <Button
+                android:id="@+id/increase_button"
+                android:layout_width="@dimen/plus_minus_button_size"
+                android:layout_height="@dimen/plus_minus_button_size"
+                android:text="@string/increment_button" />
+
             <EditText
                 android:id="@+id/edit_shoe_quantity"
-                style="@style/EditorFieldStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:hint="quantity"
                 android:inputType="number" />
+
+            <Button
+                android:id="@+id/decrease_button"
+                android:layout_width="@dimen/plus_minus_button_size"
+                android:layout_height="@dimen/plus_minus_button_size"
+                android:text="@string/decrement_button" />
 
         </LinearLayout>
     </LinearLayout>

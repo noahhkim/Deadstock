@@ -6,8 +6,8 @@
     <!-- Margin around the floating action button in CatalogActivity -->
     <dimen name="fab_margin">16dp</dimen>
 
-    <!-- Margin around the floating action button in CatalogActivity -->
-    <dimen name="button_margin">16dp</dimen>
+    <!-- Margin around the sold button in CatalogActivity -->
+    <dimen name="sold_button_margins">16dp</dimen>
 
     <!-- Height of each list item -->
     <dimen name="list_item_height">88dp</dimen>
@@ -17,4 +17,7 @@
 
     <!-- Top/bottom padding of each list item -->
     <dimen name="padding_bottom_top">8dp</dimen>
+
+    <!-- Size of increment/decrement buttons in EditorActivity -->
+    <dimen name="plus_minus_button_size">48dp</dimen>
 </resources>

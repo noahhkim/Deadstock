@@ -90,4 +90,19 @@
 
     <!-- Sold button [CHAR LIMIT=50] -->
     <string name="sold_button">Sold</string>
+
+    <!-- Increment button [CHAR LIMIT=50] -->
+    <string name="increment_button">+</string>
+
+    <!-- Decrement button [CHAR LIMIT=50] -->
+    <string name="decrement_button">-</string>
+
+    <!-- Toast message in editor when more than 500 shoes are ordered [CHAR LIMIT=50] -->
+    <string name="editor_quantity_exceeds_limit">You cannot order more than 500 shoes</string>
+
+    <!-- Toast message in editor when user tries to order less than 1 shoe [CHAR LIMIT=50] -->
+    <string name="editor_quantity_minimum_limit">You cannot order less than 1 shoe</string>
+
+    <!-- Toast message in editor when user tries to click '+' without a number in quantity EditText field [CHAR LIMIT=50] -->
+    <string name="editor_enter_number_first">You must enter a number first</string>
 </resources>

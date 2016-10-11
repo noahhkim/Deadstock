@@ -1,15 +1,15 @@
 package com.example.android.deadstock;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.LoaderManager;
 import android.support.v4.app.NavUtils;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -31,35 +32,19 @@ import com.example.android.deadstock.data.ShoeContract.ShoeEntry;
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    /**
-     * Identifier for the shoe data loader
-     */
+    /** Global variables for EditorActivity */
     private static final int EXITING_SHOE_LOADER = 0;
-
-    /**
-     * EditText field to enter the shoe's brand
-     */
     private Spinner mBrandSpinner;
-
-    /**
-     * EditText field to enter the shoe's name
-     */
     private EditText mNameEditText;
-
-    /**
-     * EditText field to enter the shoe's quantity
-     */
     private EditText mQuantityEditText;
-
-    /**
-     * EditText field to enter the shoe's price
-     */
+    private Button mIncreaseButton;
+    private Button mDecreaseButton;
     private EditText mPriceEditText;
-
-    /**
-     * Brand of the shoe
-     */
     private int mBrand = ShoeEntry.BRAND_OTHER;
+    private String quantity;
+    private int currentQuantity;
+    private String setQuantity;
+    private Uri mCurrentShoeUri;
 
     /**
      * Boolean flag that keeps track of whether the shoe has been edited (true) or not (false)
@@ -77,11 +62,6 @@ public class EditorActivity extends AppCompatActivity implements
             return false;
         }
     };
-
-    /**
-     * Content URI for the existing shoe (null if it's a new shoe)
-     */
-    private Uri mCurrentShoeUri;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,6 +90,8 @@ public class EditorActivity extends AppCompatActivity implements
         mBrandSpinner = (Spinner) findViewById(R.id.spinner_brand);
         mNameEditText = (EditText) findViewById(R.id.edit_shoe_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_shoe_quantity);
+        mIncreaseButton = (Button) findViewById(R.id.increase_button);
+        mDecreaseButton = (Button) findViewById(R.id.decrease_button);
         mPriceEditText = (EditText) findViewById(R.id.edit_shoe_price);
 
         setupSpinner();
@@ -120,6 +102,49 @@ public class EditorActivity extends AppCompatActivity implements
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
 
+        // Set up onClickListener for '+' button
+        mIncreaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantity = mQuantityEditText.getText().toString().trim();
+                // If EditText field is blank, show Toast message requiring user to enter
+                // a number first
+                if (quantity.matches("")) {
+                    Toast.makeText(EditorActivity.this, getString(R.string.editor_enter_number_first),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    currentQuantity = Integer.parseInt(quantity);
+                    currentQuantity = currentQuantity + 1;
+                    setQuantity = String.valueOf(currentQuantity);
+                    mQuantityEditText.setText(setQuantity);
+                }
+            }
+        });
+
+        // Set up onClickListener for '-' button
+        mDecreaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantity = mQuantityEditText.getText().toString().trim();
+                // If EditText field is blank, show Toast message requiring user to enter
+                // a number first
+                if (quantity.matches("")) {
+                    Toast.makeText(EditorActivity.this, getString(R.string.editor_enter_number_first),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    currentQuantity = Integer.parseInt(quantity);
+                    // Show Toast message if user tries to decrease quantity below 1
+                    if (currentQuantity == 1) {
+                        Toast.makeText(EditorActivity.this, getString(R.string.editor_quantity_minimum_limit),
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    currentQuantity = currentQuantity - 1;
+                    setQuantity = String.valueOf(currentQuantity);
+                    mQuantityEditText.setText(setQuantity);
+                }
+            }
+        });
     }
 
     /**
