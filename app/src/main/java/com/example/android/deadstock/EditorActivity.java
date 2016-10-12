@@ -7,13 +7,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,10 +27,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.deadstock.data.ShoeContract.ShoeEntry;
+
+import java.io.FileDescriptor;
+import java.io.IOException;
 
 /**
  * Allows user to create a new shoe or edit an existing one.
@@ -34,19 +43,24 @@ public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     /** Global variables for EditorActivity */
+    private static final String LOG_TAG = EditorActivity.class.getSimpleName();
     private static final int EXITING_SHOE_LOADER = 0;
+    private static final int PICK_IMAGE = 1;
     private Spinner mBrandSpinner;
     private EditText mNameEditText;
     private EditText mQuantityEditText;
     private Button mIncreaseButton;
     private Button mDecreaseButton;
     private Button mOrderButton;
+    private Button mEditImageButton;
     private EditText mPriceEditText;
     private int mBrand = ShoeEntry.BRAND_OTHER;
     private String quantity;
     private int currentQuantity;
     private String setQuantity;
     private Uri mCurrentShoeUri;
+    private Uri mUri;
+    private ImageView mImageView;
 
     /**
      * Boolean flag that keeps track of whether the shoe has been edited (true) or not (false)
@@ -64,6 +78,7 @@ public class EditorActivity extends AppCompatActivity implements
             return false;
         }
     };
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +111,8 @@ public class EditorActivity extends AppCompatActivity implements
         mDecreaseButton = (Button) findViewById(R.id.decrease_button);
         mOrderButton = (Button) findViewById(R.id.order_button);
         mPriceEditText = (EditText) findViewById(R.id.edit_shoe_price);
+        mEditImageButton = (Button) findViewById(R.id.edit_shoe_image);
+        mImageView = (ImageView) findViewById(R.id.image);
 
         setupSpinner();
 
@@ -162,6 +179,68 @@ public class EditorActivity extends AppCompatActivity implements
                 }
             }
         });
+
+        // Set up OnClickListener for get picture button
+        mEditImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                getIntent.setType("image/*");
+
+                Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
+
+                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+                startActivityForResult(pickIntent, PICK_IMAGE);
+            }
+        });
+    }
+
+    // Get thumbnail of image
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
+            mUri = data.getData();
+
+            if (data != null) {
+                mUri = data.getData();
+
+                Log.i(LOG_TAG, "Uri: " + mUri.toString());
+                Bitmap bitmap = getBitmapFromUri(mUri);
+                int nh = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
+                Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+
+                mImageView.setImageBitmap(scaled);
+            }
+        }
+    }
+
+
+    private Bitmap getBitmapFromUri(Uri uri) {
+        ParcelFileDescriptor parcelFileDescriptor = null;
+        try {
+            parcelFileDescriptor =
+                    getContentResolver().openFileDescriptor(uri, "r");
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            parcelFileDescriptor.close();
+            return image;
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Failed to load image.", e);
+            return null;
+        } finally {
+            try {
+                if (parcelFileDescriptor != null) {
+                    parcelFileDescriptor.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "Error closing ParcelFile Descriptor");
+            }
+        }
     }
 
     /**

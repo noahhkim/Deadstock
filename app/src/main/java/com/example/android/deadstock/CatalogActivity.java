@@ -22,14 +22,20 @@ import android.widget.ListView;
 
 import com.example.android.deadstock.data.ShoeContract.ShoeEntry;
 
-/** Displays list of shoes that were entered and stored in the app */
+/**
+ * Displays list of shoes that were entered and stored in the app
+ */
 public class CatalogActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Identifier for the shoe data loader */
+    /**
+     * Identifier for the shoe data loader
+     */
     private static final int SHOE_LOADER = 0;
 
-    /** Adapter for the ListView */
+    /**
+     * Adapter for the ListView
+     */
     ShoeCursorAdapter mCursorAdapter;
 
     @Override

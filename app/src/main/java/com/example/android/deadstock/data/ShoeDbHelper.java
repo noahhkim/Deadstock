@@ -34,7 +34,8 @@ public class ShoeDbHelper extends SQLiteOpenHelper {
                 + ShoeEntry.COLUMN_SHOE_BRAND + " INTEGER NOT NULL, "
                 + ShoeEntry.COLUMN_SHOE_NAME + " TEXT, "
                 + ShoeEntry.COLUMN_SHOE_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
-                + ShoeEntry.COLUMN_SHOE_PRICE + " INTEGER NOT NULL);";
+                + ShoeEntry.COLUMN_SHOE_PRICE + " INTEGER NOT NULL, "
+                + ShoeEntry.COLUMN_SHOE_IMAGE + " TEXT NOT NULL);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_SHOES_TABLE);

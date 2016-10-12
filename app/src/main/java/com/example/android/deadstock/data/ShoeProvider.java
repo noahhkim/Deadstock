@@ -145,7 +145,10 @@ public class ShoeProvider extends ContentProvider {
                     IllegalArgumentException("Shoe requires valid price");
         }
 
-        //TODO: Check image is valid
+        String shoeImage = values.getAsString(ShoeEntry.COLUMN_SHOE_IMAGE);
+        if (shoeImage == null) {
+            throw new IllegalArgumentException("Shoe requires an image");
+        }
 
         // Get write-able database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
@@ -259,7 +262,12 @@ public class ShoeProvider extends ContentProvider {
             }
         }
 
-        //TODO: Check image is valid
+        if (values.containsKey(ShoeEntry.COLUMN_SHOE_IMAGE)) {
+            String shoeImage = values.getAsString(ShoeEntry.COLUMN_SHOE_IMAGE);
+            if (shoeImage == null) {
+                throw new IllegalArgumentException("Shoe requires an image");
+            }
+        }
 
         // If there are no values to update, then don't try to update the database
         if (values.size() == 0) {

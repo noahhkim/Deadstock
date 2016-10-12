@@ -22,6 +22,12 @@
     <!-- Label for the price information in the editor [CHAR LIMIT=30] -->
     <string name="category_price">Price</string>
 
+    <!-- Label for the image information in the editor [CHAR LIMIT=30] -->
+    <string name="category_image">Image</string>
+
+    <!-- 'Take Picture' button in the editor [CHAR LIMIT=30] -->
+    <string name="take_picture">Get Picture</string>
+
     <!-- Dialog message to ask the user to confirm deleting all shoes [CHAR LIMIT=NONE] -->
     <string name="delete_all_dialog_msg">Delete all shoes?</string>
 

@@ -9,11 +9,12 @@
     tools:context=".EditorActivity">
 
 <LinearLayout
+    android:id="@+id/categories"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- Overview category -->
+    <!-- Brand category -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -145,7 +146,41 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <!-- Image category -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/category_image"/>
+
+        <!-- Input field -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+        <Button
+            android:id="@+id/edit_shoe_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/take_picture"/>
+
+            </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_above="@+id/order_button"
+        android:layout_below="@id/categories"/>
     <Button
         android:id="@+id/order_button"
         android:layout_width="wrap_content"
