@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Deadstock</string>
 
     <!-- Label for overflow menu option that inserts fake shoe data into the app [CHAR LIMIT=20] -->
@@ -117,4 +117,15 @@
 
     <!-- Email subject header for order summary [CHAR LIMIT=50] -->
     <string name="order_summary_email_subject">Order summary</string>
+
+    <!-- Shoe name for the order summary. [CHAR LIMIT=NONE]-->
+    <string name="order_summary_name">Name: <xliff:g id="name" example="Stan Smith">%s</xliff:g></string>
+
+    <!-- Shoe quantity for the order summary. [CHAR LIMIT=NONE]-->
+    <string name="order_summary_quantity">Quantity: <xliff:g id="quantity" example="20">%s</xliff:g></string>
+
+    <!-- Shoe price for the order summary. [CHAR LIMIT=NONE]-->
+    <string name="order_summary_price">Price: <xliff:g id="price" example="$80">%s</xliff:g></string>
+
+
 </resources>

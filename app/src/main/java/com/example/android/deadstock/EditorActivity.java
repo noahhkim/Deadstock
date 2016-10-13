@@ -18,6 +18,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import com.example.android.deadstock.data.ShoeContract.ShoeEntry;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.text.NumberFormat;
 
 /**
  * Allows user to create a new shoe or edit an existing one.
@@ -52,7 +54,7 @@ public class EditorActivity extends AppCompatActivity implements
     private Button mIncreaseButton;
     private Button mDecreaseButton;
     private Button mOrderButton;
-    private Button mEditImageButton;
+    private Button mGetImageButton;
     private EditText mPriceEditText;
     private int mBrand = ShoeEntry.BRAND_OTHER;
     private String quantity;
@@ -111,8 +113,8 @@ public class EditorActivity extends AppCompatActivity implements
         mDecreaseButton = (Button) findViewById(R.id.decrease_button);
         mOrderButton = (Button) findViewById(R.id.order_button);
         mPriceEditText = (EditText) findViewById(R.id.edit_shoe_price);
-        mEditImageButton = (Button) findViewById(R.id.edit_shoe_image);
-        mImageView = (ImageView) findViewById(R.id.image);
+        mGetImageButton = (Button) findViewById(R.id.get_shoe_image);
+        mImageView = (ImageView) findViewById(R.id.editor_image_preview);
 
         setupSpinner();
 
@@ -166,22 +168,8 @@ public class EditorActivity extends AppCompatActivity implements
             }
         });
 
-        // Set up OnClickListener for order button
-        mOrderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:"));
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_summary_email_subject));
-
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-            }
-        });
-
         // Set up OnClickListener for get picture button
-        mEditImageButton.setOnClickListener(new View.OnClickListener() {
+        mGetImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -199,7 +187,7 @@ public class EditorActivity extends AppCompatActivity implements
         });
     }
 
-    // Get thumbnail of image
+    // Display thumbnail of image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
@@ -218,7 +206,7 @@ public class EditorActivity extends AppCompatActivity implements
         }
     }
 
-
+    // Helper method for getting Bitmap from image URI
     private Bitmap getBitmapFromUri(Uri uri) {
         ParcelFileDescriptor parcelFileDescriptor = null;
         try {
@@ -328,6 +316,13 @@ public class EditorActivity extends AppCompatActivity implements
         }
         values.put(ShoeEntry.COLUMN_SHOE_PRICE, price);
 
+        // If no image is provided, use null by default
+        String imageString = null;
+        if (mImageView.getDrawable() != null) {
+            imageString = mUri.toString();
+        }
+        values.put(ShoeEntry.COLUMN_SHOE_IMAGE, imageString);
+
         if (mCurrentShoeUri == null) {
             // Insert a new shoe into the provider, returning the content URI for the new shoe
             Uri newUri = getContentResolver().insert(ShoeEntry.CONTENT_URI, values);
@@ -412,6 +407,7 @@ public class EditorActivity extends AppCompatActivity implements
         // Define a projection that contains all columns from the table
         String[] projection = {
                 ShoeEntry._ID,
+                ShoeEntry.COLUMN_SHOE_IMAGE,
                 ShoeEntry.COLUMN_SHOE_BRAND,
                 ShoeEntry.COLUMN_SHOE_NAME,
                 ShoeEntry.COLUMN_SHOE_QUANTITY,
@@ -439,21 +435,23 @@ public class EditorActivity extends AppCompatActivity implements
         // Proceed with moving to the first row of the cursor and reading data from it
         if (cursor.moveToFirst()) {
 
+            int imageColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_IMAGE);
             int brandColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_BRAND);
             int nameColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_NAME);
             int quantityColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_QUANTITY);
             int priceColumnIndex = cursor.getColumnIndex(ShoeEntry.COLUMN_SHOE_PRICE);
 
             // Extract out the value from the Cursor for the given column index
-            int brand = cursor.getInt(brandColumnIndex);
-            String name = cursor.getString(nameColumnIndex);
-            int quantity = cursor.getInt(quantityColumnIndex);
-            int price = cursor.getInt(priceColumnIndex);
+            final String IMAGE = cursor.getString(imageColumnIndex);
+            final int BRAND = cursor.getInt(brandColumnIndex);
+            final String NAME = cursor.getString(nameColumnIndex);
+            final int QUANTITY = cursor.getInt(quantityColumnIndex);
+            final int PRICE = cursor.getInt(priceColumnIndex);
 
             // Map constant value from database into one of the dropdown options,
             // then call setSelection() so that option is displayed on screen as
             // the current selection
-            switch (brand) {
+            switch (BRAND) {
                 case ShoeEntry.BRAND_OTHER:
                     mBrandSpinner.setSelection(0);
                     break;
@@ -478,9 +476,39 @@ public class EditorActivity extends AppCompatActivity implements
             }
 
             // Update the views on the screen with the values from the database
-            mNameEditText.setText(name);
-            mQuantityEditText.setText(Integer.toString(quantity));
-            mPriceEditText.setText(Integer.toString(price));
+            mImageView.setImageBitmap(StringToBitmap(IMAGE));
+            mNameEditText.setText(NAME);
+            mQuantityEditText.setText(Integer.toString(QUANTITY));
+            mPriceEditText.setText(Integer.toString(PRICE));
+
+            // Set up OnClickListener for order button
+            mOrderButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String message = getString(R.string.order_summary_name, NAME);
+                    message += "\n" + getString(R.string.order_summary_quantity, QUANTITY);
+                    message += "\n" + getString(R.string.order_summary_price, NumberFormat.getCurrencyInstance().format(PRICE));
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto:"));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_summary_email_subject));
+                    intent.putExtra(Intent.EXTRA_TEXT, message);
+
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
+    }
+
+    public Bitmap StringToBitmap(String encodedString) {
+        try {
+            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
         }
     }
 

@@ -29,13 +29,13 @@ public class ShoeDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create a String that contains the SQL statement to create the shoes table
-        String SQL_CREATE_SHOES_TABLE = "CREATE TABLE " + ShoeEntry.TABLE_NAME + " ("
+        String SQL_CREATE_SHOES_TABLE = "CREATE TABLE " + ShoeEntry.TABLE_NAME + " ( "
                 + ShoeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ShoeEntry.COLUMN_SHOE_IMAGE + " TEXT NOT NULL, "
                 + ShoeEntry.COLUMN_SHOE_BRAND + " INTEGER NOT NULL, "
-                + ShoeEntry.COLUMN_SHOE_NAME + " TEXT, "
+                + ShoeEntry.COLUMN_SHOE_NAME + " TEXT NOT NULL, "
                 + ShoeEntry.COLUMN_SHOE_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
-                + ShoeEntry.COLUMN_SHOE_PRICE + " INTEGER NOT NULL, "
-                + ShoeEntry.COLUMN_SHOE_IMAGE + " TEXT NOT NULL);";
+                + ShoeEntry.COLUMN_SHOE_PRICE + " INTEGER NOT NULL );";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_SHOES_TABLE);

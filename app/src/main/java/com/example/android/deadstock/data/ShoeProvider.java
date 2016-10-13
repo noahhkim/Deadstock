@@ -145,6 +145,7 @@ public class ShoeProvider extends ContentProvider {
                     IllegalArgumentException("Shoe requires valid price");
         }
 
+        // Check that the image is not null
         String shoeImage = values.getAsString(ShoeEntry.COLUMN_SHOE_IMAGE);
         if (shoeImage == null) {
             throw new IllegalArgumentException("Shoe requires an image");
@@ -262,6 +263,8 @@ public class ShoeProvider extends ContentProvider {
             }
         }
 
+        // If the {@link ShoeEntry#COLUMN_SHOE_IMAGE} key is present,
+        // check that the image value is valid.
         if (values.containsKey(ShoeEntry.COLUMN_SHOE_IMAGE)) {
             String shoeImage = values.getAsString(ShoeEntry.COLUMN_SHOE_IMAGE);
             if (shoeImage == null) {

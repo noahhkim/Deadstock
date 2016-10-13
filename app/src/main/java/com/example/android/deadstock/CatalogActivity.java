@@ -98,6 +98,7 @@ public class CatalogActivity extends AppCompatActivity implements
         // Create a ContentValues object where column names are the keys,
         // and sample shoe attributes are the values.
         ContentValues values = new ContentValues();
+        values.put(ShoeEntry.COLUMN_SHOE_IMAGE, "IMAGE");
         values.put(ShoeEntry.COLUMN_SHOE_BRAND, ShoeEntry.BRAND_JORDAN);
         values.put(ShoeEntry.COLUMN_SHOE_NAME, "Jordan");
         values.put(ShoeEntry.COLUMN_SHOE_QUANTITY, 5);
@@ -172,6 +173,8 @@ public class CatalogActivity extends AppCompatActivity implements
         // we will actually use after this query
         String[] projection = {
                 ShoeEntry._ID,
+                ShoeEntry.COLUMN_SHOE_IMAGE,
+                ShoeEntry.COLUMN_SHOE_BRAND,
                 ShoeEntry.COLUMN_SHOE_NAME,
                 ShoeEntry.COLUMN_SHOE_QUANTITY,
                 ShoeEntry.COLUMN_SHOE_PRICE};

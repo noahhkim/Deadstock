@@ -166,7 +166,7 @@
             android:orientation="vertical">
 
         <Button
-            android:id="@+id/edit_shoe_image"
+            android:id="@+id/get_shoe_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/take_picture"/>
@@ -175,7 +175,7 @@
     </LinearLayout>
 </LinearLayout>
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/editor_image_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
