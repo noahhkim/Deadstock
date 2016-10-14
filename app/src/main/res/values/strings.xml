@@ -128,4 +128,7 @@
     <string name="order_summary_price">Price: <xliff:g id="price" example="$80">%s</xliff:g></string>
 
 
+    <!-- Toast message if no image is selected for the order summary. [CHAR LIMIT=NONE]-->
+    <string name="order_summary_select_image">Please select an image</string>
+
 </resources>

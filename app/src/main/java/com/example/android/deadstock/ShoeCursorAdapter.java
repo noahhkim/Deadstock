@@ -36,7 +36,7 @@ public class ShoeCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         // Find individual views to modify in list item layout
-        ImageView imageView = (ImageView) view.findViewById(R.id.image_thumbnail);
+        ImageView imageView = (ImageView) view.findViewById(R.id.list_item_thumbnail);
         TextView nameView = (TextView) view.findViewById(R.id.name);
         TextView quantityView = (TextView) view.findViewById(R.id.quantity);
         TextView priceView = (TextView) view.findViewById(R.id.price);

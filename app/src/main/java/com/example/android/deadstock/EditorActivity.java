@@ -15,6 +15,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -44,7 +45,9 @@ import java.text.NumberFormat;
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Global variables for EditorActivity */
+    /**
+     * Global variables for EditorActivity
+     */
     private static final String LOG_TAG = EditorActivity.class.getSimpleName();
     private static final int EXITING_SHOE_LOADER = 0;
     private static final int PICK_IMAGE = 1;
@@ -63,6 +66,7 @@ public class EditorActivity extends AppCompatActivity implements
     private Uri mCurrentShoeUri;
     private Uri mUri;
     private ImageView mImageView;
+    private ImageView mThumbnailView;
 
     /**
      * Boolean flag that keeps track of whether the shoe has been edited (true) or not (false)
@@ -115,6 +119,7 @@ public class EditorActivity extends AppCompatActivity implements
         mPriceEditText = (EditText) findViewById(R.id.edit_shoe_price);
         mGetImageButton = (Button) findViewById(R.id.get_shoe_image);
         mImageView = (ImageView) findViewById(R.id.editor_image_preview);
+        mThumbnailView = (ImageView) findViewById(R.id.list_item_thumbnail);
 
         setupSpinner();
 
@@ -180,7 +185,7 @@ public class EditorActivity extends AppCompatActivity implements
                 pickIntent.setType("image/*");
 
                 Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                 startActivityForResult(pickIntent, PICK_IMAGE);
             }
@@ -291,6 +296,7 @@ public class EditorActivity extends AppCompatActivity implements
                 TextUtils.isEmpty(nameString) &&
                 TextUtils.isEmpty(quantityString) &&
                 TextUtils.isEmpty(priceString) &&
+                mUri == null &&
                 mBrand == ShoeEntry.BRAND_OTHER) {
             // Return early without creating new shoe
             return;
@@ -316,9 +322,9 @@ public class EditorActivity extends AppCompatActivity implements
         }
         values.put(ShoeEntry.COLUMN_SHOE_PRICE, price);
 
-        // If no image is provided, use null by default
-        String imageString = null;
-        if (mImageView.getDrawable() != null) {
+        // If no image is provided, use "no image" by default
+        String imageString = "no image";
+        if (mUri != null) {
             imageString = mUri.toString();
         }
         values.put(ShoeEntry.COLUMN_SHOE_IMAGE, imageString);
@@ -476,7 +482,8 @@ public class EditorActivity extends AppCompatActivity implements
             }
 
             // Update the views on the screen with the values from the database
-            mImageView.setImageBitmap(StringToBitmap(IMAGE));
+            Uri imageUri = Uri.parse(IMAGE);
+            mImageView.setImageBitmap(getBitmapFromUri(imageUri));
             mNameEditText.setText(NAME);
             mQuantityEditText.setText(Integer.toString(QUANTITY));
             mPriceEditText.setText(Integer.toString(PRICE));
@@ -488,10 +495,20 @@ public class EditorActivity extends AppCompatActivity implements
                     String message = getString(R.string.order_summary_name, NAME);
                     message += "\n" + getString(R.string.order_summary_quantity, QUANTITY);
                     message += "\n" + getString(R.string.order_summary_price, NumberFormat.getCurrencyInstance().format(PRICE));
-                    Intent intent = new Intent(Intent.ACTION_SENDTO);
-                    intent.setData(Uri.parse("mailto:"));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_summary_email_subject));
-                    intent.putExtra(Intent.EXTRA_TEXT, message);
+
+                    Intent intent = ShareCompat.IntentBuilder.from(EditorActivity.this).setStream(mUri)
+                            .setSubject(getString(R.string.order_summary_email_subject))
+                            .setText(message)
+                            .getIntent();
+
+                    if (mUri == null) {
+                        Toast.makeText(EditorActivity.this, R.string.order_summary_select_image, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    intent.setData(mUri);
+                    intent.setType("message/rfc822");
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(Intent.createChooser(intent, "Share with"));
 
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivity(intent);
@@ -503,7 +520,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     public Bitmap StringToBitmap(String encodedString) {
         try {
-            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
         } catch (Exception e) {
@@ -519,6 +536,7 @@ public class EditorActivity extends AppCompatActivity implements
         mNameEditText.setText("");
         mQuantityEditText.setText("");
         mPriceEditText.setText("");
+        mImageView.setImageBitmap(null);
     }
 
     // Method for creating a "Discard changes" dialog

@@ -99,15 +99,15 @@ public class CatalogActivity extends AppCompatActivity implements
         // and sample shoe attributes are the values.
         ContentValues values = new ContentValues();
         values.put(ShoeEntry.COLUMN_SHOE_IMAGE, "IMAGE");
-        values.put(ShoeEntry.COLUMN_SHOE_BRAND, ShoeEntry.BRAND_JORDAN);
-        values.put(ShoeEntry.COLUMN_SHOE_NAME, "Jordan");
+        values.put(ShoeEntry.COLUMN_SHOE_BRAND, ShoeEntry.BRAND_NIKE);
+        values.put(ShoeEntry.COLUMN_SHOE_NAME, "Air Force 1");
         values.put(ShoeEntry.COLUMN_SHOE_QUANTITY, 5);
         values.put(ShoeEntry.COLUMN_SHOE_PRICE, 3);
 
-        // Insert a new row for Toto into the provider using the ContentResolver.
-        // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
-        // into the pets database table.
-        // Receive the new content URI that will allow us to access Toto's data in the future.
+        // Insert a new row for shoe into the provider using the ContentResolver.
+        // Use the {@link ShoeEntry#CONTENT_URI} to indicate that we want to insert
+        // into the shoes database table.
+        // Receive the new content URI that will allow us to access the shoe's data in the future.
         Uri newUri = getContentResolver().insert(ShoeEntry.CONTENT_URI, values);
     }
 
