@@ -19,7 +19,6 @@ import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +66,7 @@ public class EditorActivity extends AppCompatActivity implements
     private Uri mUri;
     private ImageView mImageView;
     private ImageView mThumbnailView;
+
 
     /**
      * Boolean flag that keeps track of whether the shoe has been edited (true) or not (false)
@@ -518,17 +518,6 @@ public class EditorActivity extends AppCompatActivity implements
         }
     }
 
-    public Bitmap StringToBitmap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // If the loader is invalidated, clear out all the data from the input fields
@@ -635,4 +624,5 @@ public class EditorActivity extends AppCompatActivity implements
         // Close the activity
         finish();
     }
+
 }

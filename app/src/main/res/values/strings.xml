@@ -127,8 +127,9 @@
     <!-- Shoe price for the order summary. [CHAR LIMIT=NONE]-->
     <string name="order_summary_price">Price: <xliff:g id="price" example="$80">%s</xliff:g></string>
 
-
     <!-- Toast message if no image is selected for the order summary. [CHAR LIMIT=NONE]-->
     <string name="order_summary_select_image">Please select an image</string>
 
+    <!-- Toast message if user clicks sold button after 0. [CHAR LIMIT=NONE]-->
+    <string name="order_button_decrease_warning">Cannot reduce quantity below 0</string>
 </resources>
