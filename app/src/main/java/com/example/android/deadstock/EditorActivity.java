@@ -373,8 +373,19 @@ public class EditorActivity extends AppCompatActivity implements
         switch (item.getItemId()) {
             // Respond to "Save" menu option
             case R.id.action_save:
-                // Save shoe to database
-                saveShoe();
+                // Check if user enters all the needed info. If not, prompt toast message
+                if (mNameEditText == null ||
+                        mQuantityEditText == null ||
+                        mPriceEditText == null ||
+                        mUri == null) {
+                    // Pop up toast message alerting user to input data for all fields
+                    Toast.makeText(EditorActivity.this, getString(R.string.editor_empty_product_info),
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                } else {
+                    // Save shoe to database
+                    saveShoe();
+                }
                 // Exit activity
                 finish();
                 return true;

@@ -88,6 +88,9 @@
     <!-- AlertDialog for unsaved changes [CHAR LIMIT=50] -->
     <string name="unsaved_changes_dialog_msg">Discard your changes quit editing?</string>
 
+    <!-- Toast message for empty product information [CHAR LIMIT=50] -->
+    <string name="editor_empty_product_info">Please enter data for all fields</string>
+
     <!-- "Discard" option for unsaved changes [CHAR LIMIT=50] -->
     <string name="discard">Discard</string>
 

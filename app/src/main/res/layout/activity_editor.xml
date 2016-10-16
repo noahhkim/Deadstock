@@ -177,7 +177,7 @@
     <ImageView
         android:id="@+id/editor_image_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:layout_above="@+id/order_button"
         android:layout_below="@id/categories"/>
